@@ -4,8 +4,8 @@ import time
 # model_path = "../Synthia-70B-v1.1"
 # output_file_path = "./Synthia-70B-conversations.jsonl"
 
-model_path = "C:/LLaMA2-13B-Tiefighter"
-output_file_path = "./LLaMA2-13B-Tiefighter.jsonl"
+model_path = "./OPT-13B-Erebus"
+output_file_path = "./OPT-13B-Erebus.jsonl"
 
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
