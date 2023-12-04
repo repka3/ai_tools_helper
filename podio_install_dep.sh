@@ -4,4 +4,6 @@ apt-get install git-lfs
 git-lfs install
 apt-get install nano
 bash
+pip install transformers
+pip install accelerate
 
