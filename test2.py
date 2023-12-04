@@ -52,7 +52,7 @@ gen_cfg.do_sample=True
 gen_cfg.num_return_sequences=1
 # gen_cfg.early_stopping=True
 # gen_cfg.num_beams=2
-gen_cfg.max_time=10
+gen_cfg.max_time=30
 print(model.generation_config)
 def generate_text(instruction):
     
