@@ -7,7 +7,7 @@ import time
 # model_path = "../Synthia-70B-v1.1"
 # output_file_path = "./Synthia-70B-conversations.jsonl"
 
-model_path = "C:\KoboldAI\models\LLaMA2-13B-Tiefighter"
+model_path = "/workspace/text-generation-webui/models/KoboldAI_LLaMA2-13B-Tiefighter/"
 #model_path = "C:\KoboldAI\models\OPT-6.7B-Erebus"
 output_file_path = "./test.jsonl"
 
