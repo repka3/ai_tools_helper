@@ -2,14 +2,37 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 import torch, json
-from transformers import AutoModelForCausalLM, AutoTokenizer,AutoConfig,GenerationConfig,MaxTimeCriteria
+from transformers import AutoModelForCausalLM, AutoTokenizer,GenerationConfig
 import time
+import os
 # model_path = "../Synthia-70B-v1.1"
 # output_file_path = "./Synthia-70B-conversations.jsonl"
 
-model_path = "/workspace/text-generation-webui/models/KoboldAI_LLaMA2-13B-Tiefighter/"
+#model_path = "C:\KoboldAI\models\openchat_3.5"
 #model_path = "C:\KoboldAI\models\OPT-6.7B-Erebus"
-output_file_path = "./test.jsonl"
+
+#get the parameter -m from the command line to the absolute path of the model
+#also get the parameter -n without any value to start a new conversation
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-m", "--model", help="absolute path to the model")
+parser.add_argument("-n", "--new", help="start a new conversation", action="store_true")
+args = parser.parse_args()
+model_path = args.model
+new_conversation = args.new
+
+if model_path is None:
+    print("Please specify the absolute path to the model with -m")
+    quit()
+output_file_path = "./test2.jsonl"
+if new_conversation:
+    #delete the file if it exists
+    if os.path.exists(output_file_path):
+        os.remove(output_file_path)
+
+    
 
 model = AutoModelForCausalLM.from_pretrained(
     model_path,
@@ -29,6 +52,7 @@ gen_cfg.do_sample=True
 gen_cfg.num_return_sequences=1
 # gen_cfg.early_stopping=True
 # gen_cfg.num_beams=2
+gen_cfg.max_time=10
 print(model.generation_config)
 def generate_text(instruction):
     
@@ -48,15 +72,14 @@ def generate_text(instruction):
     return f"{answer}"
 
 conversation = ""
-system_messages = [
-    "SYSTEM: As a girl called AMY, 19 years old,which speak only english, shy and submissive with large breast, you are very respectful,you provide a sexy and flirty conversation.You start every sentence with Sir.",
-]
-
+with open ("start_inputs_test2.txt", "r") as myfile:
+    system_messages = myfile.readlines()
 conversation = "\n".join(system_messages)
-
+print("system messages:")
+print(conversation)
 while True:
     user_input = input("You: ")
-    llm_prompt = f"{conversation} \nUSER: {user_input} \AMY: "
+    llm_prompt = f"{conversation} \nUSER: {user_input} \nAMY: "
     # calculate elapsed time
     start=time.time()
     answer = generate_text(llm_prompt)
@@ -67,7 +90,9 @@ while True:
     h, m = divmod(m, 60)
     elapsed_time = "%d:%02d:%02d" % (h, m, s)
     print("Elapsed time: " + elapsed_time)
-    print(answer)
+    splitted = answer.split("AMY:")
+    for sentences in splitted:
+        print("AMY: " + sentences)
     conversation = f"{llm_prompt}{answer}"
     json_data = {"prompt": user_input, "answer": answer}
 

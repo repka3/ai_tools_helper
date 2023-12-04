@@ -8,4 +8,3 @@ pip install accelerate
 pip install sentencepiece
 pip install protobuf
 git clone https://huggingface.co/KoboldAI/LLaMA2-13B-Tiefighter
-bash
