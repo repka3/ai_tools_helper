@@ -6,4 +6,5 @@ apt-get install nano
 bash
 pip install transformers
 pip install accelerate
+git clone https://huggingface.co/KoboldAI/LLaMA2-13B-Tiefighter
 
