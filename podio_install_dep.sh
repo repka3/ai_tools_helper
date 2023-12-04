@@ -3,8 +3,9 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 apt-get install git-lfs
 git-lfs install
 apt-get install nano
-bash
 pip install transformers
 pip install accelerate
+pip install sentencepiece
+pip install protobuf
 git clone https://huggingface.co/KoboldAI/LLaMA2-13B-Tiefighter
-
+bash
