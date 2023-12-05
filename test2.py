@@ -18,14 +18,26 @@ import argparse
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-m", "--model", help="absolute path to the model")
+parser.add_argument("-s", "--startprompt", help="absolute path to start prompt")
+
 parser.add_argument("-n", "--new", help="start a new conversation", action="store_true")
 args = parser.parse_args()
 model_path = args.model
 new_conversation = args.new
-
+start_prompt_path = args.startprompt
 if model_path is None:
     print("Please specify the absolute path to the model with -m")
     quit()
+if start_prompt_path is None:
+    print("Please specify the absolute path to the start prompt with -s")
+    quit()
+if not os.path.exists(model_path):
+    print("The model path does not exist")
+    quit()
+if not os.path.exists(start_prompt_path):
+    print("The start prompt path does not exist")
+    quit()
+
 output_file_path = "./test2.jsonl"
 if new_conversation:
     #delete the file if it exists
@@ -52,7 +64,7 @@ gen_cfg.do_sample=True
 gen_cfg.num_return_sequences=1
 # gen_cfg.early_stopping=True
 # gen_cfg.num_beams=2
-gen_cfg.max_time=30
+gen_cfg.max_time=60
 print(model.generation_config)
 def generate_text(instruction):
     
@@ -68,18 +80,21 @@ def generate_text(instruction):
     length = len(input_ids[0])
     output = out[0][length:]
     string = tokenizer.decode(output, skip_special_tokens=True)
+    print("full answer: ")
+    print(string)
     answer = string.split("USER:")[0].strip()
+    
     return f"{answer}"
 
 conversation = ""
-with open ("start_inputs_test2.txt", "r") as myfile:
+with open (start_prompt_path, "r",encoding='utf-8') as myfile:
     system_messages = myfile.readlines()
 conversation = "\n".join(system_messages)
 print("system messages:")
 print(conversation)
 while True:
     user_input = input("You: ")
-    llm_prompt = f"{conversation} \nUSER: {user_input} \nAMY: "
+    llm_prompt = f"{conversation} \nUSER: {user_input} \nASSISTANT: "
     # calculate elapsed time
     start=time.time()
     answer = generate_text(llm_prompt)
@@ -90,9 +105,9 @@ while True:
     h, m = divmod(m, 60)
     elapsed_time = "%d:%02d:%02d" % (h, m, s)
     print("Elapsed time: " + elapsed_time)
-    splitted = answer.split("AMY:")
+    splitted = answer.split("ASSISTANT:")
     for sentences in splitted:
-        print("AMY: " + sentences)
+        print("ASSISTANT: " + sentences)
     conversation = f"{llm_prompt}{answer}"
     json_data = {"prompt": user_input, "answer": answer}
 
