@@ -58,7 +58,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 gen_cfg = GenerationConfig.from_model_config(model.config)
 # model.config.max_new_tokens = 30
 # model.config.min_length = 1
-gen_cfg.max_new_tokens=1024
+gen_cfg.max_new_tokens=512
 gen_cfg.min_length=1
 gen_cfg.do_sample=True
 gen_cfg.num_return_sequences=1
