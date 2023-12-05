@@ -58,7 +58,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_path, trust_remote_code=True)
 gen_cfg = GenerationConfig.from_model_config(model.config)
 # model.config.max_new_tokens = 30
 # model.config.min_length = 1
-gen_cfg.max_new_tokens=512
+gen_cfg.max_new_tokens=256
 gen_cfg.min_length=1
 gen_cfg.do_sample=True
 gen_cfg.num_return_sequences=1
@@ -94,7 +94,7 @@ print("system messages:")
 print(conversation)
 while True:
     user_input = input("You: ")
-    llm_prompt = f"{conversation} \nUSER: {user_input} \nASSISTANT: "
+    llm_prompt = f"{conversation} \nUSER: {user_input} \nAI: "
     # calculate elapsed time
     start=time.time()
     answer = generate_text(llm_prompt)
@@ -105,9 +105,9 @@ while True:
     h, m = divmod(m, 60)
     elapsed_time = "%d:%02d:%02d" % (h, m, s)
     print("Elapsed time: " + elapsed_time)
-    splitted = answer.split("ASSISTANT:")
+    splitted = answer.split("AI:")
     for sentences in splitted:
-        print("ASSISTANT: " + sentences)
+        print("AI: " + sentences)
     conversation = f"{llm_prompt}{answer}"
     json_data = {"prompt": user_input, "answer": answer}
 
